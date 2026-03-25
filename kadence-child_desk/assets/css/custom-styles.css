@@ -1,0 +1,35 @@
+/**
+ * Kadence Quick View - Кастомные стили
+ */
+
+/* Скрываем элементы только в quick view */
+body.is-quick-view .breadcrumb,
+body.is-quick-view .woocommerce-breadcrumb,
+body.is-quick-view .related.products,
+body.is-quick-view .product_meta,
+body.is-quick-view .up-sells,
+body.is-quick-view .woocommerce-tabs,
+body.is-quick-view .footer-phone-button,
+body.is-quick-view .phone-button,
+body.is-quick-view .call-button,
+body.is-quick-view .sticky-phone-btn {
+    display: none !important;
+}
+
+/* Оптимизируем размер quick view */
+.kadence-quick-view-modal .product {
+    max-width: 100%;
+}
+
+.kadence-quick-view-modal .product-title-wrapper {
+    max-width: 100% !important;
+}
+
+/* Плавное закрытие */
+.quick-view-overlay {
+    transition: opacity 0.3s ease-in-out;
+}
+
+.kadence-quick-view-modal {
+    transition: all 0.3s ease-in-out;
+}

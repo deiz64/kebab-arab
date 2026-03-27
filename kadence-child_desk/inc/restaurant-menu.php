@@ -92,14 +92,19 @@ if (! function_exists('kc_restaurant_render_product_card')) {
 		}
 
 		$short_description = $product->get_short_description();
+		$product_url = $product->get_permalink();
 		?>
-		<article class="ff-menu-card js-menu-product-trigger" data-product-id="<?php echo esc_attr($product->get_id()); ?>">
-			<div class="ff-menu-card__image">
-				<?php echo $image_html; ?>
-			</div>
+		<article class="ff-menu-card js-menu-product-trigger" data-product-id="<?php echo esc_attr($product->get_id()); ?>" data-product-url="<?php echo esc_url($product_url); ?>">
+			<a class="ff-menu-card__image-link" href="<?php echo esc_url($product_url); ?>" aria-label="<?php echo esc_attr($product->get_name()); ?>">
+				<div class="ff-menu-card__image">
+					<?php echo $image_html; ?>
+				</div>
+			</a>
 
 			<div class="ff-menu-card__body">
-				<h3 class="ff-menu-card__title"><?php echo esc_html($product->get_name()); ?></h3>
+				<h3 class="ff-menu-card__title">
+					<a class="ff-menu-card__title-link" href="<?php echo esc_url($product_url); ?>"><?php echo esc_html($product->get_name()); ?></a>
+				</h3>
 
 				<?php if (! empty($short_description)) : ?>
 					<div class="ff-menu-card__desc">
@@ -132,6 +137,7 @@ if (! function_exists('kc_restaurant_render_product_card')) {
 								type="button"
 								class="ff-menu-card__button"
 								data-product-id="<?php echo esc_attr($product->get_id()); ?>"
+								data-product-url="<?php echo esc_url($product_url); ?>"
 								aria-label="<?php esc_attr_e('Adaugă în coș', 'ffkebab'); ?>"
 								title="<?php esc_attr_e('Adaugă în coș', 'ffkebab'); ?>"
 							>

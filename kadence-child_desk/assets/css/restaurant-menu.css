@@ -488,6 +488,21 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	font-weight: 700;
 }
 
+.ff-menu-card__image-link {
+	display: block;
+	color: inherit;
+	text-decoration: none;
+}
+
+.ff-menu-card__title-link {
+	color: inherit;
+	text-decoration: none;
+}
+
+.ff-menu-card__title-link:hover {
+	color: inherit;
+}
+
 .ff-menu-card__desc {
 	margin: 0 0 12px;
 	color: #666;
@@ -531,6 +546,15 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 }
 
 @media (max-width: 767px) {
+	body.ff-menu-modal-open {
+		overflow: auto;
+	}
+
+	.ff-menu-modal,
+	.ff-menu-modal.is-open {
+		display: none !important;
+	}
+
 	.kc-menu-grid {
 		grid-template-columns: 1fr !important;
 		gap: 16px !important;

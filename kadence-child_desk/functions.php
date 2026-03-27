@@ -47,6 +47,7 @@ function ff_restaurant_menu_assets() {
     wp_localize_script('ff-restaurant-menu', 'ffMenu', array(
         'ajaxUrl'                   => admin_url('admin-ajax.php'),
         'nonce'                     => wp_create_nonce('ff_menu_nonce'),
+        'mobileBreakpoint'          => 767,
         'currencySymbol'            => function_exists('get_woocommerce_currency_symbol') ? html_entity_decode(get_woocommerce_currency_symbol(), ENT_QUOTES, 'UTF-8') : '',
         'currencyFormatNumDecimals' => function_exists('wc_get_price_decimals') ? wc_get_price_decimals() : 2,
         'currencyFormatDecimalSep'  => function_exists('wc_get_price_decimal_separator') ? wc_get_price_decimal_separator() : '.',

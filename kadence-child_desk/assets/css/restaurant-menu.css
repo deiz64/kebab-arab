@@ -248,7 +248,7 @@ body.ff-menu-modal-open {
 	flex: 1 1 auto;
 	border: 0;
 	border-radius: 16px;
-	background: #111827;
+	/*background: #111827;=======чёрная кнопка корзины*/   
 	color: #fff;
 	display: inline-flex;
 	align-items: center;

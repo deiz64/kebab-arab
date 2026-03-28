@@ -91,6 +91,7 @@ body.ff-menu-modal-open {
 	display: grid;
 	grid-template-columns: minmax(0, 1fr) 420px;
 	grid-template-rows: minmax(0, 1fr);
+	gap: 24px;
 }
 
 .ff-modal-product__options {
@@ -248,7 +249,6 @@ body.ff-menu-modal-open {
 	flex: 1 1 auto;
 	border: 0;
 	border-radius: 16px;
-	/*background: #111827;=======чёрная кнопка корзины*/   
 	color: #fff;
 	display: inline-flex;
 	align-items: center;
@@ -313,122 +313,19 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	pointer-events: none !important;
 }
 
-/* ========== MOBILE MODAL ========== */
+/* ========== MOBILE MODAL NOTICE ========== */
 
 @media (max-width: 767px) {
-	:root {
-		--ff-phone-button-clearance: 78px;
-	}
-
-	.ff-menu-modal {
-		padding: 0;
-		align-items: flex-end;
-	}
-
-	.ff-menu-modal__dialog {
-		width: 100vw;
-		height: 100vh;
-		max-height: 100vh;
-		border-radius: 20px 20px 0 0;
-	}
-
-	.ff-menu-modal__body {
-		height: 100%;
-		min-height: 0;
-	}
-
-	.ff-menu-add-form {
-		height: 100%;
-		min-height: 0;
-		display: flex;
-		flex-direction: column;
-	}
-
-	.ff-modal-product {
-		height: 100%;
-		min-height: 0;
-	}
-
-	.ff-modal-product__grid {
-		display: flex;
-		flex-direction: column;
-		height: 100%;
-		min-height: 0;
-	}
-
-	.ff-modal-product__summary {
-		order: 1;
-		flex: 0 0 auto;
-		padding: 10px 10px 0;
-		border-left: 0;
-		background: #fff;
+	#ff-menu-modal .ff-menu-modal__dialog:has(.ff-required-options-notice) {
+		width: calc(100vw - 24px);
+		max-width: calc(100vw - 24px);
+		height: auto;
+		max-height: none;
+		margin: 0 auto 12px;
+		background: transparent;
+		box-shadow: none;
+		border-radius: 0;
 		overflow: visible;
-	}
-
-	.ff-modal-product__options {
-		order: 2;
-		flex: 1 1 auto;
-		min-height: 0;
-		padding: 12px 12px 110px;
-		overflow-y: auto;
-		overflow-x: hidden;
-		-webkit-overflow-scrolling: touch;
-	}
-
-	.ff-modal-product__image {
-		aspect-ratio: 16 / 10;
-		margin: 0 0 12px;
-		border-radius: 18px;
-	}
-
-	.ff-modal-product__title {
-		font-size: 20px;
-		line-height: 1.15;
-		margin: 0 0 8px;
-	}
-
-	.ff-modal-product__desc {
-		font-size: 14px;
-		line-height: 1.4;
-		margin: 0 0 10px;
-	}
-
-	.ff-modal-product__price {
-		font-size: 19px;
-		margin-bottom: 8px;
-	}
-
-	.ff-menu-modal__close {
-		top: 10px;
-		right: 10px;
-		width: 40px;
-		height: 40px;
-	}
-
-	.ff-modal-product__footer {
-		padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
-	}
-
-	.ff-qty {
-		flex: 0 0 110px;
-	}
-
-	.ff-qty__btn {
-		width: 36px;
-		height: 48px;
-	}
-
-	.ff-qty .quantity {
-		width: 38px;
-	}
-
-	.ff-qty .quantity input.qty {
-		height: 48px;
-	}
-
-	.ff-menu-submit {
-		height: 48px;
-		font-size: 14px;
 	}
 }
 
@@ -488,21 +385,6 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	font-weight: 700;
 }
 
-.ff-menu-card__image-link {
-	display: block;
-	color: inherit;
-	text-decoration: none;
-}
-
-.ff-menu-card__title-link {
-	color: inherit;
-	text-decoration: none;
-}
-
-.ff-menu-card__title-link:hover {
-	color: inherit;
-}
-
 .ff-menu-card__desc {
 	margin: 0 0 12px;
 	color: #666;
@@ -546,15 +428,6 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 }
 
 @media (max-width: 767px) {
-	body.ff-menu-modal-open {
-		overflow: auto;
-	}
-
-	.ff-menu-modal,
-	.ff-menu-modal.is-open {
-		display: none !important;
-	}
-
 	.kc-menu-grid {
 		grid-template-columns: 1fr !important;
 		gap: 16px !important;
@@ -628,16 +501,6 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 }
 
 /* ========== NOTICE О ОБЯЗАТЕЛЬНЫХ ИНГРЕДИЕНТАХ ========== */
-
-#ff-menu-modal .ff-menu-modal__dialog:has(.ff-required-options-notice) {
-	width: auto;
-	max-width: min(700px, calc(100vw - 32px));
-	max-height: none;
-	background: transparent;
-	box-shadow: none;
-	border-radius: 0;
-	overflow: visible;
-}
 
 .ff-required-options-notice {
 	display: flex;
@@ -756,62 +619,6 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	border: 1px solid #fecaca;
 }
 
-/* ========== MOBILE NOTICE ========== */
-
-@media (max-width: 767px) {
-	#ff-menu-modal .ff-menu-modal__dialog:has(.ff-required-options-notice) {
-		width: calc(100vw - 24px);
-		max-width: calc(100vw - 24px);
-		height: auto;
-		max-height: none;
-		margin: 0 auto 12px;
-		background: transparent;
-		box-shadow: none;
-		border-radius: 0;
-		overflow: visible;
-	}
-
-	.ff-required-options-notice {
-		width: 100%;
-		max-width: 100%;
-		min-height: auto;
-		margin: 0 auto;
-		padding: 24px 18px;
-		background: rgba(255, 255, 255, 0.30);
-		border-radius: 22px;
-	}
-
-	.ff-required-options-notice__icon {
-		font-size: 30px;
-		margin-bottom: 10px;
-	}
-
-	.ff-required-options-notice__title {
-		font-size: 22px;
-		line-height: 1.1;
-		margin-bottom: 12px;
-	}
-
-	.ff-required-options-notice__text {
-		font-size: 14px;
-		line-height: 1.45;
-		margin-bottom: 18px;
-	}
-
-	.ff-required-options-notice__actions {
-		width: 100%;
-		flex-direction: column;
-		gap: 10px;
-	}
-
-	.ff-menu-btn {
-		width: 100%;
-		min-width: 0;
-		min-height: 50px;
-		padding: 14px 18px;
-	}
-}
-
 /* =================================================
    NOTICE + ПОДСВЕТКА ОБЯЗАТЕЛЬНОЙ RADIO-ГРУППЫ
 ================================================= */
@@ -848,19 +655,9 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	padding: 12px !important;
 }
 
-/* чтобы заголовок обязательной группы был заметнее в подсветке */
 .ff-required-group-error .wcdm-group-header {
 	border-bottom-color: rgba(239, 68, 68, 0.18);
 }
-
-@media (max-width: 767px) {
-	.ff-menu-popup-notice {
-		margin-bottom: 14px;
-		padding: 11px 12px;
-		font-size: 13px;
-	}
-}
-
 
 /* =================================================
    ГРУППА ОСТРОТЫ У ЦЕНЫ В POPUP
@@ -941,7 +738,296 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	box-shadow: inset 0 0 0 1px #111827;
 }
 
+/* =========================================================
+   POPUP LAYOUT MODES
+   ========================================================= */
+
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 420px;
+	gap: 24px;
+}
+
+.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__grid {
+	display: block;
+}
+
+.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__summary {
+	width: 100%;
+	max-width: none;
+}
+
+.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options {
+	display: none;
+}
+
+.ff-modal-product__meta {
+	display: flex;
+	flex-direction: column;
+	gap: 10px;
+}
+
+.ff-popup-layout-compact {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	margin-top: 12px;
+}
+
+.ff-popup-layout-compact__row {
+	display: grid;
+	gap: 12px;
+}
+
+.ff-popup-layout-compact__row--top {
+	grid-template-columns: minmax(0, 1fr) 88px;
+}
+
+.ff-popup-compact-comment,
+.ff-popup-compact-rating {
+	min-height: 46px;
+	border: 1px solid #d1d5db;
+	border-radius: 14px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: #fff;
+	font-weight: 600;
+	font-size: 14px;
+	line-height: 1.2;
+}
+
+.ff-popup-compact-rating {
+	font-size: 18px;
+}
+
+/* =========================================================
+   FULL POPUP — СЕТКА МОДИФИКАТОРОВ (DESKTOP)
+   ========================================================= */
+
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers {
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+	gap: 16px;
+	align-items: start;
+}
+
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group {
+	margin: 0 !important;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(1),
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(2) {
+	grid-column: span 1;
+}
+
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+3),
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .ff-form-messages,
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .js-ff-required-options-notice,
+.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .ff-menu-special-request--full {
+	grid-column: 1 / -1;
+}
+
+.ff-menu-special-request {
+	background: #fff;
+	border: 1px solid #e5e7eb;
+	border-radius: 18px;
+	padding: 16px;
+	box-sizing: border-box;
+}
+
+.ff-menu-special-request__label {
+	display: block;
+	margin: 0 0 10px;
+	font-size: 16px;
+	line-height: 1.2;
+	font-weight: 700;
+	color: #111827;
+}
+
+.ff-menu-special-request__textarea {
+	display: block;
+	width: 100%;
+	min-height: 120px;
+	padding: 12px 14px;
+	border: 1px solid #d1d5db;
+	border-radius: 14px;
+	resize: vertical;
+	box-sizing: border-box;
+	font: inherit;
+	line-height: 1.45;
+	background: #fff;
+	color: #111827;
+}
+
+.ff-menu-special-request__textarea:focus {
+	outline: none;
+	border-color: #111827;
+}
+
+/* =========================================================
+   RESPONSIVE DESKTOP/TABLET
+   ========================================================= */
+
+@media (max-width: 1200px) {
+	.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid {
+		grid-template-columns: minmax(0, 1fr) 380px;
+		gap: 20px;
+	}
+}
+
+/* =========================================================
+   MOBILE — ОДИН ОБЩИЙ СКРОЛЛ POPUP
+   ========================================================= */
+
 @media (max-width: 767px) {
+	:root {
+		--ff-phone-button-clearance: 78px;
+	}
+
+	.ff-menu-modal {
+		padding: 0;
+		align-items: flex-end;
+	}
+
+	.ff-menu-modal__dialog {
+		width: 100vw;
+		height: 100dvh;
+		max-height: 100dvh;
+		border-radius: 20px 20px 0 0;
+		overflow: hidden;
+	}
+
+	.ff-menu-modal__body {
+		height: 100%;
+		min-height: 0;
+		overflow-y: auto;
+		overflow-x: hidden;
+		-webkit-overflow-scrolling: touch;
+	}
+
+	.ff-menu-add-form {
+		height: auto;
+		min-height: 100%;
+		display: flex;
+		flex-direction: column;
+	}
+
+	.ff-modal-product {
+		height: auto;
+		min-height: 100%;
+		display: block;
+	}
+
+	/* на mobile всегда полный режим, без hidden options */
+	.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid,
+	.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__grid,
+	.ff-modal-product__grid {
+		display: block !important;
+		height: auto !important;
+		min-height: 0 !important;
+	}
+
+	.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options,
+	.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options,
+	.ff-modal-product__options {
+		display: block !important;
+	}
+
+	.ff-modal-product__summary {
+		order: initial;
+		padding: 10px 10px 12px;
+		border-left: 0;
+		background: #fff;
+		overflow: visible;
+	}
+
+	.ff-modal-product__options {
+		order: initial;
+		height: auto;
+		max-height: none;
+		min-height: 0;
+		padding: 0 12px 12px;
+		overflow: visible;
+		background: #fff;
+	}
+
+	.ff-modal-product__footer {
+		position: static;
+		left: auto;
+		right: auto;
+		bottom: auto;
+		display: grid;
+		grid-template-columns: 110px minmax(0, 1fr);
+		gap: 10px;
+		align-items: center;
+		padding: 8px 12px calc(12px + env(safe-area-inset-bottom));
+		background: #fff;
+		border-top: 0;
+		backdrop-filter: none;
+		z-index: auto;
+	}
+
+	.ff-qty {
+		flex: 0 0 auto;
+		width: 100%;
+	}
+
+	.ff-qty .quantity {
+		width: 100%;
+	}
+
+	.ff-qty__btn {
+		width: 36px;
+		height: 48px;
+	}
+
+	.ff-qty .quantity input.qty {
+		height: 48px;
+	}
+
+	.ff-menu-submit {
+		width: 100%;
+		height: 48px;
+		font-size: 14px;
+	}
+
+	.ff-modal-product__image {
+		aspect-ratio: 16 / 10;
+		margin: 0 0 12px;
+		border-radius: 18px;
+	}
+
+	.ff-modal-product__title {
+		font-size: 20px;
+		line-height: 1.15;
+		margin: 0 0 8px;
+	}
+
+	.ff-modal-product__desc {
+		font-size: 14px;
+		line-height: 1.4;
+		margin: 0 0 10px;
+	}
+
+	.ff-modal-product__price {
+		font-size: 19px;
+		margin-bottom: 8px;
+	}
+
+	.ff-menu-modal__close {
+		top: 10px;
+		right: 10px;
+		width: 40px;
+		height: 40px;
+	}
+
+	.ff-modal-product__meta {
+		gap: 8px;
+	}
+
 	.ff-modal-product__summary .ff-spice-group {
 		margin-top: 10px;
 		padding-top: 10px;
@@ -964,567 +1050,102 @@ body.ff-menu-modal-open .is-hidden-by-modal {
 	.ff-modal-product__summary .ff-spice-group .wcdm-name {
 		font-size: 12px;
 	}
-}
-/* =========================================================
-   POPUP LAYOUT MODES: FULL / COMPACT
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-/* базовые режимы popup */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 420px;
-  gap: 24px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__grid {
-  display: block;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__summary {
-  width: 100%;
-  max-width: none;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options {
-  display: none;
-}
-
-/* summary meta */
-.ff-modal-product__meta {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-/* spice group в full */
-.ff-modal-product__summary .ff-spice-group {
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid rgba(0,0,0,0.08);
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-group-header {
-  margin-bottom: 8px;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-group-header h3 {
-  margin: 0;
-  font-size: 14px;
-  line-height: 1.2;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-options-list {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 8px;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-option-row {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 8px 6px;
-  border: 1px solid rgba(0,0,0,0.12);
-  border-radius: 12px;
-  background: #fff;
-  position: relative;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-price-col {
-  display: none;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-check-col {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 4px;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-info-col {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 0;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-name {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  text-align: center;
-  font-size: 13px;
-  line-height: 1.1;
-  white-space: nowrap;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-name .emoji {
-  width: 14px;
-  height: 14px;
-}
-
-.ff-modal-product__summary .ff-spice-group .wcdm-option-row:has(input[type="radio"]:checked) {
-  border-color: #111;
-  box-shadow: inset 0 0 0 1px #111;
-}
-
-/* compact popup: блок под фото */
-.ff-popup-layout-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 12px;
-}
-
-.ff-popup-layout-compact__row {
-  display: grid;
-  gap: 12px;
-}
-
-.ff-popup-layout-compact__row--top {
-  grid-template-columns: minmax(0, 1fr) 88px;
-}
-
-.ff-popup-compact-comment,
-.ff-popup-compact-rating {
-  min-height: 46px;
-  border: 1px solid #d1d5db;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #fff;
-  font-weight: 600;
-  font-size: 14px;
-  line-height: 1.2;
-}
-
-.ff-popup-compact-rating {
-  font-size: 18px;
-}
-
-/* desktop/tablet */
-@media (max-width: 1200px) {
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid {
-    grid-template-columns: minmax(0, 1fr) 380px;
-    gap: 20px;
-  }
-}
-
-/* mobile-first поведение */
-@media (max-width: 767px) {
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__grid,
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__grid {
-    display: block !important;
-  }
-
-  .ff-menu-modal__dialog .ff-modal-product__summary {
-    width: 100% !important;
-    max-width: none !important;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options {
-    display: none !important;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options {
-    display: block !important;
-  }
-
-  .ff-modal-product__meta {
-    gap: 8px;
-  }
-
-  .ff-modal-product__summary .ff-spice-group {
-    margin-top: 10px;
-    padding-top: 8px;
-  }
-
-  .ff-modal-product__summary .ff-spice-group .wcdm-options-list {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 6px;
-  }
-
-  .ff-modal-product__summary .ff-spice-group .wcdm-option-row {
-    min-height: 40px;
-    padding: 6px 4px;
-    border-radius: 10px;
-  }
-
-  .ff-modal-product__summary .ff-spice-group .wcdm-name {
-    font-size: 12px;
-  }
-
-  .ff-popup-layout-compact {
-    gap: 10px;
-    margin-top: 10px;
-  }
-
-  .ff-popup-layout-compact__row--top {
-    grid-template-columns: minmax(0, 1fr) 72px;
-    gap: 10px;
-  }
-
-  .ff-popup-compact-comment,
-  .ff-popup-compact-rating {
-    min-height: 42px;
-    border-radius: 12px;
-    font-size: 13px;
-  }
-
-  .ff-popup-compact-rating {
-    font-size: 16px;
-  }
-}
-
-/* =========================================================
-   FULL POPUP — РЕАЛЬНАЯ СЕТКА БЛОКОВ ДЛЯ МОДИФИКАТОРОВ
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group {
-  margin: 0 !important;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* 1-й и 2-й блоки сверху рядом */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(1),
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(2) {
-  grid-column: span 1;
-}
-
-/* все группы начиная с 3-й — на всю ширину */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+3) {
-  grid-column: 1 / -1;
-}
-
-/* сообщения тоже на всю ширину */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .ff-form-messages,
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .js-ff-required-options-notice {
-  grid-column: 1 / -1;
-}
-
-/* мобильная версия: всё в одну колонку */
-@media (max-width: 767px) {
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers {
-    grid-template-columns: 1fr;
-    gap: 12px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group,
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(1),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(2),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+3) {
-    grid-column: 1 / -1;
-  }
-}
-
-/* =========================================================
-   FULL POPUP — 3-Й И 4-Й БЛОК
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-/* если есть 3-я группа — делаем её широким нижним блоком */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(3) {
-  grid-column: 1 / -1;
-  min-height: 140px;
-}
-
-/* если есть 4-я группа — маленький блок снизу справа */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(4) {
-  grid-column: 2 / 3;
-  max-width: 260px;
-  justify-self: end;
-}
 
-/* все группы после 4-й пока тоже на всю ширину */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+5) {
-  grid-column: 1 / -1;
+	/* на mobile модификаторы идут в одну колонку, без split-scroll */
+	.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers,
+	.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options #wcdm-product-modifiers {
+		display: grid;
+		grid-template-columns: 1fr;
+		gap: 12px;
+	}
+
+	.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group,
+	.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group {
+		grid-column: 1 / -1 !important;
+		max-width: none !important;
+		justify-self: stretch !important;
+	}
+
+	.ff-menu-special-request {
+		padding: 14px;
+		border-radius: 16px;
+	}
+
+	.ff-menu-special-request__label {
+		font-size: 15px;
+		margin-bottom: 8px;
+	}
+
+	.ff-menu-special-request__textarea {
+		min-height: 100px;
+		padding: 10px 12px;
+		border-radius: 12px;
+	}
+
+	.ff-popup-layout-compact {
+		gap: 10px;
+		margin-top: 12px;
+	}
+
+	.ff-popup-layout-compact__row--top {
+		grid-template-columns: minmax(0, 1fr) 72px;
+		gap: 10px;
+	}
+
+	.ff-popup-compact-comment,
+	.ff-popup-compact-rating {
+		min-height: 42px;
+		border-radius: 12px;
+		font-size: 13px;
+	}
+
+	.ff-popup-compact-rating {
+		font-size: 16px;
+	}
+
+	.ff-required-options-notice {
+		width: 100%;
+		max-width: 100%;
+		min-height: auto;
+		margin: 0 auto;
+		padding: 24px 18px;
+		background: rgba(255, 255, 255, 0.30);
+		border-radius: 22px;
+	}
+
+	.ff-required-options-notice__icon {
+		font-size: 30px;
+		margin-bottom: 10px;
+	}
+
+	.ff-required-options-notice__title {
+		font-size: 22px;
+		line-height: 1.1;
+		margin-bottom: 12px;
+	}
+
+	.ff-required-options-notice__text {
+		font-size: 14px;
+		line-height: 1.45;
+		margin-bottom: 18px;
+	}
+
+	.ff-required-options-notice__actions {
+		width: 100%;
+		flex-direction: column;
+		gap: 10px;
+	}
+
+	.ff-menu-btn {
+		width: 100%;
+		min-width: 0;
+		min-height: 50px;
+		padding: 14px 18px;
+	}
+
+	.ff-menu-popup-notice {
+		margin-bottom: 14px;
+		padding: 11px 12px;
+		font-size: 13px;
+	}
 }
-
-/* mobile: всё снова в одну колонку */
-@media (max-width: 767px) {
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(3),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(4),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+5) {
-    grid-column: 1 / -1;
-    max-width: none;
-    justify-self: stretch;
-  }
-}/* =========================================================
-   FULL POPUP — 3-Й И 4-Й БЛОК
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-/* если есть 3-я группа — делаем её широким нижним блоком */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(3) {
-  grid-column: 1 / -1;
-  min-height: 140px;
-}
-
-/* если есть 4-я группа — маленький блок снизу справа */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(4) {
-  grid-column: 2 / 3;
-  max-width: 260px;
-  justify-self: end;
-}
-
-/* все группы после 4-й пока тоже на всю ширину */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+5) {
-  grid-column: 1 / -1;
-}
-
-/* mobile: всё снова в одну колонку */
-@media (max-width: 767px) {
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(3),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(4),
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers > .wcdm-group:nth-child(n+5) {
-    grid-column: 1 / -1;
-    max-width: none;
-    justify-self: stretch;
-  }
-}
-
-/* =========================================================
-   SPECIAL REQUEST TEXTAREA
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-.ff-menu-special-request {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 16px;
-  box-sizing: border-box;
-}
-
-.ff-menu-special-request__label {
-  display: block;
-  margin: 0 0 10px;
-  font-size: 16px;
-  line-height: 1.2;
-  font-weight: 700;
-  color: #111827;
-}
-
-.ff-menu-special-request__textarea {
-  display: block;
-  width: 100%;
-  min-height: 120px;
-  padding: 12px 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 14px;
-  resize: vertical;
-  box-sizing: border-box;
-  font: inherit;
-  line-height: 1.45;
-  background: #fff;
-  color: #111827;
-}
-
-.ff-menu-special-request__textarea:focus {
-  outline: none;
-  border-color: #111827;
-}
-
-/* full popup: textarea как 3-й широкий блок */
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options #wcdm-product-modifiers {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
-}
-
-.ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .ff-menu-special-request--full {
-  grid-column: 1 / -1;
-  min-height: 140px;
-  margin: 0 0 16px;
-}
-
-@media (max-width: 767px) {
-  .ff-menu-special-request {
-    padding: 14px;
-    border-radius: 16px;
-  }
-
-  .ff-menu-special-request__label {
-    font-size: 15px;
-    margin-bottom: 8px;
-  }
-
-  .ff-menu-special-request__textarea {
-    min-height: 100px;
-    padding: 10px 12px;
-    border-radius: 12px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--full .ff-modal-product__options .ff-menu-special-request--full {
-    grid-column: 1 / -1;
-    margin: 0 0 12px;
-  }
-}
-
-/* =========================================================
-   COMPACT POPUP — ФИНАЛЬНЫЙ LAYOUT
-   ВСТАВИТЬ В КОНЕЦ assets/css/restaurant-menu.css
-   ========================================================= */
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-menu-add-form {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__grid {
-  display: flex !important;
-  flex-direction: column;
-  gap: 0;
-  flex: 1 1 auto;
-  min-height: 0;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__summary {
-  width: 100% !important;
-  max-width: none !important;
-  padding-bottom: 12px !important;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__image {
-  margin-bottom: 12px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__meta {
-  gap: 10px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__title {
-  margin: 0;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__desc {
-  margin: 0;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__price {
-  margin: 0;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__options {
-  display: none !important;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-layout-compact {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 14px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-layout-compact__row {
-  display: grid;
-  gap: 12px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-layout-compact__row--top {
-  grid-template-columns: minmax(0, 1fr) 88px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-comment,
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-rating {
-  min-height: 48px;
-  border: 1px solid #d1d5db;
-  border-radius: 14px;
-  background: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-rating {
-  font-size: 18px;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__footer {
-  margin-top: auto;
-  display: grid;
-  grid-template-columns: 160px minmax(0, 1fr);
-  gap: 12px;
-  align-items: center;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-qty {
-  width: 100%;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-qty .quantity {
-  width: 100%;
-}
-
-.ff-menu-modal__dialog.ff-modal--compact .ff-menu-submit {
-  width: 100%;
-}
-
-/* =========================
-   MOBILE
-   ========================= */
-
-@media (max-width: 767px) {
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__summary {
-    padding-bottom: 10px !important;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__image {
-    margin-bottom: 10px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__meta {
-    gap: 8px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-popup-layout-compact {
-    gap: 10px;
-    margin-top: 12px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-popup-layout-compact__row--top {
-    grid-template-columns: minmax(0, 1fr) 72px;
-    gap: 10px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-comment,
-  .ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-rating {
-    min-height: 42px;
-    border-radius: 12px;
-    font-size: 13px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-popup-compact-rating {
-    font-size: 16px;
-  }
-
-  .ff-menu-modal__dialog.ff-modal--compact .ff-modal-product__footer {
-    grid-template-columns: 110px minmax(0, 1fr);
-    gap: 10px;
-  }
-}
-
-

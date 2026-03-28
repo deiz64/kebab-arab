@@ -5,32 +5,8 @@
     const $modalBody = $modal.find('.js-ff-menu-modal-body');
     let lastScrollTop = 0;
 
-    function getMobileBreakpoint() {
-        return Number(ffMenu.mobileBreakpoint || 767);
-    }
-
-    function isMobileViewport() {
-        return window.matchMedia('(max-width: ' + getMobileBreakpoint() + 'px)').matches;
-    }
-
-    function getProductUrl($trigger) {
-        return String(
-            $trigger.data('productUrl') ||
-            $trigger.closest('[data-product-url]').data('productUrl') ||
-            $trigger.closest('[data-product-url]').attr('data-product-url') ||
-            $trigger.closest('.ff-menu-card').find('.ff-menu-card__title-link').attr('href') ||
-            ''
-        ).trim();
-    }
-
-    function redirectToProductPage(productUrl) {
-        if (!productUrl) {
-            console.log('❌ Не найден URL страницы товара');
-            return false;
-        }
-
-        window.location.assign(productUrl);
-        return true;
+    function isMobilePopupViewport() {
+        return window.matchMedia('(max-width: 767px)').matches;
     }
 
     /**
@@ -56,10 +32,6 @@
      * Открывает модальное окно (оболочку) с загрузчиком
      */
     function openModalShell() {
-        if (isMobileViewport()) {
-            return false;
-        }
-
         lastScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
 
         $('body').addClass('ff-menu-modal-open');
@@ -70,8 +42,6 @@
 
         $modalBody.html('<div class="ff-menu-modal__loading">' + ffMenu.i18n.loading + '</div>');
         $modal.prop('hidden', false).addClass('is-open');
-
-        return true;
     }
 
     /**
@@ -136,8 +106,13 @@
 
     /**
      * Возвращает режим popup из HTML
+     * На mobile всегда используем full, чтобы опции не скрывались.
      */
     function getPopupLayoutMode() {
+        if (isMobilePopupViewport()) {
+            return 'full';
+        }
+
         const $product = $modal.find('.ff-modal-product').first();
 
         if (!$product.length) {
@@ -291,6 +266,21 @@
     }
 
     /**
+     * Возвращает scroll-контейнер для автоскролла к ошибке
+     * На mobile скроллится всё окно popup, а не только блок опций.
+     */
+    function getModalScrollContainer($form) {
+        if (isMobilePopupViewport()) {
+            const $body = $modal.find('.ff-menu-modal__body').first();
+            if ($body.length) {
+                return $body;
+            }
+        }
+
+        return getModalOptionsContainer($form);
+    }
+
+    /**
      * Удаляет верхний notice обязательных опций
      */
     function clearRequiredOptionsNotice($form) {
@@ -401,20 +391,19 @@
             return;
         }
 
-        const $options = getModalOptionsContainer($form);
+        const $container = getModalScrollContainer($form);
 
-        if (!$options.length) {
+        if (!$container.length) {
             return;
         }
 
-        const containerTop = $options.offset().top;
+        const containerTop = $container.offset().top;
         const groupTop = $group.offset().top;
-        const currentScroll = $options.scrollTop();
-        const offset = 18;
-
+        const currentScroll = $container.scrollTop();
+        const offset = isMobilePopupViewport() ? 14 : 18;
         const targetScroll = currentScroll + (groupTop - containerTop) - offset;
 
-        $options.stop().animate({
+        $container.stop().animate({
             scrollTop: Math.max(0, targetScroll)
         }, 300);
     }
@@ -459,13 +448,8 @@
     /**
      * Красивое окно для обязательных ингредиентов
      */
-    function openRequiredOptionsNotice(productId, message, productUrl) {
+    function openRequiredOptionsNotice(productId, message) {
         const safeMessage = message || 'Сначала выберите ингредиенты для этого блюда.';
-
-        if (isMobileViewport() && redirectToProductPage(productUrl)) {
-            return;
-        }
-
         lastScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
 
         $('body').addClass('ff-menu-modal-open');
@@ -481,7 +465,7 @@
                 <div class="ff-required-options-notice__text">${safeMessage}</div>
 
                 <div class="ff-required-options-notice__actions">
-                    <button type="button" class="ff-menu-btn ff-menu-btn--primary js-ff-open-product-options" data-product-id="${productId}" data-product-url="${productUrl || ''}">
+                    <button type="button" class="ff-menu-btn ff-menu-btn--primary js-ff-open-product-options" data-product-id="${productId}">
                         Выбрать ингредиенты
                     </button>
 
@@ -517,21 +501,12 @@
     /**
      * Открывает popup товара по productId
      */
-    function openProductPopup(productId, productUrl) {
+    function openProductPopup(productId) {
         if (!productId) {
             return;
         }
 
-        if (isMobileViewport()) {
-            redirectToProductPage(productUrl);
-            return;
-        }
-
-        console.log('✅ Открываем модальное окно для товара #' + productId);
-
-        if (!openModalShell()) {
-            return;
-        }
+        openModalShell();
 
         $.post(ffMenu.ajaxUrl, {
             action: 'ff_menu_get_product',
@@ -540,17 +515,14 @@
         })
         .done(function (response) {
             if (!response || !response.success || !response.data || !response.data.html) {
-                console.log('❌ Ошибка загрузки товара');
                 renderProductLoadError(ffMenu.i18n.error || 'Не удалось загрузить товар.');
                 return;
             }
 
-            console.log('✅ Товар загружен, вставляем в модалку');
             $modalBody.html(response.data.html);
             initModalContent();
         })
         .fail(function () {
-            console.log('❌ AJAX fail при загрузке товара');
             renderProductLoadError(ffMenu.i18n.error || 'Не удалось загрузить товар.');
         });
     }
@@ -558,61 +530,42 @@
     // ==================== Обработчики событий ====================
 
     $(document).on('click', '.js-menu-product-trigger', function (e) {
-        console.log('Сработал обработчик модального окна (js-menu-product-trigger)');
-
         if ($(e.target).closest('.js-ff-card-add, .ff-menu-card__button').length) {
-            console.log('⛔ Клик по кнопке быстрого добавления, модальное окно не открывается');
-            return;
-        }
-
-        const $trigger = $(this);
-        const productId = parseInt(getProductId($trigger), 10);
-        const productUrl = getProductUrl($trigger);
-
-        if (isMobileViewport()) {
-            if ($(e.target).closest('a[href]').length) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-            redirectToProductPage(productUrl);
             return;
         }
 
         e.preventDefault();
         e.stopPropagation();
 
+        const $trigger = $(this);
+        const productId = parseInt(getProductId($trigger), 10);
+
         if (!productId) {
-            console.log('❌ Не найден productId');
             return;
         }
 
-        openProductPopup(productId, productUrl);
+        openProductPopup(productId);
     });
 
     $(document).on('click', '.js-ff-open-product-options', function (e) {
         e.preventDefault();
 
         const productId = parseInt($(this).data('productId'), 10);
-        const productUrl = getProductUrl($(this));
 
         if (!productId) {
             return;
         }
 
-        openProductPopup(productId, productUrl);
+        openProductPopup(productId);
     });
 
     $(document).on('click', '.js-ff-menu-close, #ff-menu-modal .ff-menu-modal__backdrop', function (e) {
         e.preventDefault();
-        console.log('Закрытие модального окна');
         closeModal();
     });
 
     $(document).on('keydown', function (e) {
         if (e.key === 'Escape' && $modal.hasClass('is-open')) {
-            console.log('Escape — закрываем модалку');
             closeModal();
         }
     });
@@ -670,8 +623,6 @@
         $submit.prop('disabled', true).addClass('is-loading');
         $messages.empty().removeClass('is-error is-success');
 
-        console.log('Отправка формы добавления в корзину');
-
         $.post(ffMenu.ajaxUrl, {
             action: 'ff_menu_add_to_cart',
             nonce: ffMenu.nonce,
@@ -685,8 +636,6 @@
                     msg = extractErrorText(response.data.message);
                 }
 
-                console.log('❌ Ошибка добавления: ' + msg);
-
                 const handledRequiredRadio = showRequiredRadioValidationState($form, 'Выберите обязательные опции');
 
                 if (!handledRequiredRadio) {
@@ -697,8 +646,6 @@
 
                 return;
             }
-
-            console.log('✅ Товар добавлен в корзину');
 
             if (response.data && response.data.stickyCartHtml) {
                 $('#ff-sticky-cart-wrap').replaceWith(response.data.stickyCartHtml);
@@ -718,8 +665,6 @@
             if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
                 msg = extractErrorText(xhr.responseJSON.data.message);
             }
-
-            console.log('❌ AJAX fail: ' + msg);
 
             const handledRequiredRadio = showRequiredRadioValidationState($form, 'Выберите обязательные опции');
 
@@ -791,34 +736,22 @@
     // ==================== КНОПКА БЫСТРОГО ДОБАВЛЕНИЯ С КАРТОЧКИ ====================
 
     $(document).on('click', '.js-ff-card-add, .ff-menu-card__button', function (e) {
-        console.log('⚡ Сработала кнопка быстрого добавления');
-
         e.preventDefault();
         e.stopPropagation();
 
         const $button = $(this);
         const productId = parseInt($button.data('productId'), 10);
-        const productUrl = getProductUrl($button);
-
-        if (isMobileViewport()) {
-            redirectToProductPage(productUrl);
-            return;
-        }
 
         if (!productId) {
-            console.log('❌ Нет productId у кнопки');
             return;
         }
 
         if ($button.prop('disabled') || $button.data('processing') === true) {
-            console.log('⏳ Уже обрабатывается запрос');
             return;
         }
 
         $button.data('processing', true);
         $button.prop('disabled', true).addClass('is-loading');
-
-        console.log('Отправка быстрого добавления товара #' + productId);
 
         $.post(ffMenu.ajaxUrl, {
             action: 'ff_menu_add_to_cart',
@@ -831,8 +764,6 @@
         })
         .done(function (response) {
             if (response && response.success) {
-                console.log('✅ Товар добавлен через быструю кнопку');
-
                 if (response.data && response.data.stickyCartHtml) {
                     $('#ff-sticky-cart-wrap').replaceWith(response.data.stickyCartHtml);
                 }
@@ -855,8 +786,7 @@
                 message = extractErrorText(response.data.message);
             }
 
-            console.log('❌ Нужны обязательные опции: ' + message);
-            openRequiredOptionsNotice(productId, message, productUrl);
+            openRequiredOptionsNotice(productId, message);
         })
         .fail(function (xhr) {
             let message = 'Сначала выберите ингредиенты для этого блюда.';
@@ -865,19 +795,12 @@
                 message = extractErrorText(xhr.responseJSON.data.message);
             }
 
-            console.log('❌ Ошибка запроса: ' + message);
-            openRequiredOptionsNotice(productId, message, productUrl);
+            openRequiredOptionsNotice(productId, message);
         })
         .always(function () {
             $button.prop('disabled', false).removeClass('is-loading');
             $button.data('processing', false);
         });
-    });
-
-    $(window).on('resize orientationchange', function () {
-        if (isMobileViewport() && $modal.hasClass('is-open')) {
-            closeModal();
-        }
     });
 
     // ==================== НАВИГАЦИЯ ПО КАТЕГОРИЯМ ====================

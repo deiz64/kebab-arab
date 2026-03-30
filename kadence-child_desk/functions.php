@@ -6,14 +6,25 @@
 
 defined('ABSPATH') || exit; // Защита от прямого доступа
 
-/* ==================== ПОДКЛЮЧЕНИЕ ОСНОВНОГО ФАЙЛА МЕНЮ ==================== */
-// В этом файле находятся функции для вывода меню (kc_*, ff_*)
-require_once get_stylesheet_directory() . '/inc/restaurant-menu.php';
-/* подключаем настройки UI меню */
-require_once get_stylesheet_directory() . '/inc/menu-ui-settings.php';
+/* ==================== ПОДКЛЮЧЕНИЕ ОСНОВНЫХ ФАЙЛОВ ==================== */
 
-//Тут написана будет группа модификаторов
-require_once get_stylesheet_directory() . '/inc/wcdm-required-message.php';
+/**
+ * Безопасное подключение файлов с проверкой существования.
+ *
+ * @param string $file_path Относительный путь к файлу.
+ * @return void
+ */
+function ffk_require_file($file_path) {
+    $full_path = get_stylesheet_directory() . $file_path;
+    if (file_exists($full_path)) {
+        require_once $full_path;
+    }
+}
+
+// Подключаем основные файлы меню
+ffk_require_file('/inc/restaurant-menu.php');
+ffk_require_file('/inc/menu-ui-settings.php');
+ffk_require_file('/inc/wcdm-required-message.php');
 
 /* ==================== ПОДКЛЮЧЕНИЕ СТИЛЕЙ И СКРИПТОВ ТОЛЬКО НА СТРАНИЦЕ /MENU/ ==================== */
 add_action('wp_enqueue_scripts', 'ff_restaurant_menu_assets', 20);

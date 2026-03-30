@@ -3,10 +3,41 @@
 
     const $modal = $('#ff-menu-modal');
     const $modalBody = $modal.find('.js-ff-menu-modal-body');
+    const uiConfig = ffMenu.ui || {};
+    const uiTexts = uiConfig.texts || {};
+    const uiBehavior = uiConfig.behavior || {};
     let lastScrollTop = 0;
 
     function isMobilePopupViewport() {
-        return window.matchMedia('(max-width: 767px)').matches;
+        const breakpoint = Number(ffMenu.mobileBreakpoint || 767);
+        return window.matchMedia('(max-width: ' + breakpoint + 'px)').matches;
+    }
+
+    function getText(key, fallback) {
+        const value = uiTexts[key];
+
+        if (typeof value === 'string' && value.trim() !== '') {
+            return value.trim();
+        }
+
+        return fallback;
+    }
+
+    function getBehaviorFlag(key, fallback) {
+        if (typeof uiBehavior[key] === 'undefined') {
+            return fallback;
+        }
+
+        return !(uiBehavior[key] === false || uiBehavior[key] === 0 || uiBehavior[key] === '0');
+    }
+
+    function getBehaviorNumber(key, fallback) {
+        const value = Number(uiBehavior[key]);
+        return Number.isFinite(value) ? value : fallback;
+    }
+
+    function escapeHtml(value) {
+        return $('<div>').text(String(value || '')).html();
     }
 
     /**
@@ -40,7 +71,7 @@
             $(ffMenu.phoneButtonSelector).addClass('is-hidden-by-modal');
         }
 
-        $modalBody.html('<div class="ff-menu-modal__loading">' + ffMenu.i18n.loading + '</div>');
+        $modalBody.html('<div class="ff-menu-modal__loading">' + escapeHtml(getText('loading', ffMenu.i18n.loading || 'Загрузка...')) + '</div>');
         $modal.prop('hidden', false).addClass('is-open');
     }
 
@@ -237,7 +268,7 @@
      */
     function extractErrorText(message) {
         if (!message) {
-            return 'Для этого товара нужно сначала выбрать обязательные добавки.';
+            return getText('requiredError', 'Выберите обязательные опции');
         }
 
         const html = $('<div>').html(message);
@@ -255,7 +286,7 @@
         }
 
         const plain = html.text().trim();
-        return plain || 'Для этого товара нужно сначала выбрать обязательные добавки.';
+        return plain || getText('requiredError', 'Выберите обязательные опции');
     }
 
     /**
@@ -305,6 +336,7 @@
      */
     function showRequiredOptionsNoticeInline($form, message) {
         const $options = getModalOptionsContainer($form);
+        const showNoticeIcon = getBehaviorFlag('showNoticeIcon', true);
 
         if (!$options.length) {
             return;
@@ -314,8 +346,8 @@
 
         const noticeHtml = `
             <div class="ff-menu-popup-notice js-ff-required-options-notice" role="alert">
-                <span class="ff-menu-popup-notice__icon">⚠</span>
-                <span class="ff-menu-popup-notice__text">${message || 'Выберите обязательные опции'}</span>
+                ${showNoticeIcon ? '<span class="ff-menu-popup-notice__icon">⚠</span>' : ''}
+                <span class="ff-menu-popup-notice__text">${message || getText('requiredError', 'Выберите обязательные опции')}</span>
             </div>
         `;
 
@@ -380,6 +412,10 @@
             return;
         }
 
+        if (!getBehaviorFlag('requiredGroupHighlight', true)) {
+            return;
+        }
+
         $group.addClass('ff-required-group-error');
     }
 
@@ -388,6 +424,10 @@
      */
     function scrollToRequiredGroup($form, $group) {
         if (!$group || !$group.length) {
+            return;
+        }
+
+        if (!getBehaviorFlag('requiredGroupAutoscroll', true)) {
             return;
         }
 
@@ -400,7 +440,8 @@
         const containerTop = $container.offset().top;
         const groupTop = $group.offset().top;
         const currentScroll = $container.scrollTop();
-        const offset = isMobilePopupViewport() ? 14 : 18;
+        const fallbackOffset = isMobilePopupViewport() ? 14 : 18;
+        const offset = getBehaviorNumber('requiredGroupScrollOffset', fallbackOffset);
         const targetScroll = currentScroll + (groupTop - containerTop) - offset;
 
         $container.stop().animate({
@@ -421,7 +462,7 @@
             return false;
         }
 
-        showRequiredOptionsNoticeInline($form, message || 'Выберите обязательные опции');
+        showRequiredOptionsNoticeInline($form, message || getText('requiredError', 'Выберите обязательные опции'));
         highlightRequiredGroup($invalidGroup);
         scrollToRequiredGroup($form, $invalidGroup);
 
@@ -449,7 +490,10 @@
      * Красивое окно для обязательных ингредиентов
      */
     function openRequiredOptionsNotice(productId, message) {
-        const safeMessage = message || 'Сначала выберите ингредиенты для этого блюда.';
+        const safeMessage = message || getText('requiredError', 'Выберите обязательные опции');
+        const titleText = escapeHtml(getText('requiredError', 'Выберите обязательные опции'));
+        const actionText = escapeHtml(getText('noticeButton', 'Выбрать ингредиенты'));
+        const closeText = escapeHtml(getText('closeButton', ffMenu.i18n.close || 'Закрыть'));
         lastScrollTop = window.pageYOffset || document.documentElement.scrollTop || 0;
 
         $('body').addClass('ff-menu-modal-open');
@@ -461,16 +505,16 @@
         $modalBody.html(`
             <div class="ff-required-options-notice">
                 <div class="ff-required-options-notice__icon">🍴</div>
-                <h3 class="ff-required-options-notice__title">Выберите ингредиенты</h3>
+                <h3 class="ff-required-options-notice__title">${titleText}</h3>
                 <div class="ff-required-options-notice__text">${safeMessage}</div>
 
                 <div class="ff-required-options-notice__actions">
                     <button type="button" class="ff-menu-btn ff-menu-btn--primary js-ff-open-product-options" data-product-id="${productId}">
-                        Выбрать ингредиенты
+                        ${actionText}
                     </button>
 
                     <button type="button" class="ff-menu-btn ff-menu-btn--ghost js-ff-menu-close">
-                        Закрыть
+                        ${closeText}
                     </button>
                 </div>
             </div>
@@ -483,15 +527,16 @@
      * Красивое сообщение об ошибке загрузки товара
      */
     function renderProductLoadError(message) {
+        const closeText = escapeHtml(getText('closeButton', ffMenu.i18n.close || 'Закрыть'));
         $modalBody.html(`
             <div class="ff-required-options-notice">
                 <div class="ff-required-options-notice__icon">⚠️</div>
                 <h3 class="ff-required-options-notice__title">Ошибка</h3>
-                <div class="ff-required-options-notice__text">${message || 'Не удалось загрузить товар.'}</div>
+                <div class="ff-required-options-notice__text">${message || getText('loadError', 'Не удалось загрузить товар.')}</div>
 
                 <div class="ff-required-options-notice__actions">
                     <button type="button" class="ff-menu-btn ff-menu-btn--ghost js-ff-menu-close">
-                        Закрыть
+                        ${closeText}
                     </button>
                 </div>
             </div>
@@ -515,7 +560,7 @@
         })
         .done(function (response) {
             if (!response || !response.success || !response.data || !response.data.html) {
-                renderProductLoadError(ffMenu.i18n.error || 'Не удалось загрузить товар.');
+                renderProductLoadError(getText('loadError', ffMenu.i18n.error || 'Не удалось загрузить товар.'));
                 return;
             }
 
@@ -523,7 +568,7 @@
             initModalContent();
         })
         .fail(function () {
-            renderProductLoadError(ffMenu.i18n.error || 'Не удалось загрузить товар.');
+            renderProductLoadError(getText('loadError', ffMenu.i18n.error || 'Не удалось загрузить товар.'));
         });
     }
 
@@ -630,13 +675,13 @@
         })
         .done(function (response) {
             if (!response || !response.success) {
-                let msg = 'Выберите обязательные опции';
+                let msg = getText('requiredError', 'Выберите обязательные опции');
 
                 if (response && response.data && response.data.message) {
                     msg = extractErrorText(response.data.message);
                 }
 
-                const handledRequiredRadio = showRequiredRadioValidationState($form, 'Выберите обязательные опции');
+                const handledRequiredRadio = showRequiredRadioValidationState($form, msg);
 
                 if (!handledRequiredRadio) {
                     $messages
@@ -660,13 +705,13 @@
             closeModal();
         })
         .fail(function (xhr) {
-            let msg = 'Выберите обязательные опции';
+            let msg = getText('requiredError', 'Выберите обязательные опции');
 
             if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
                 msg = extractErrorText(xhr.responseJSON.data.message);
             }
 
-            const handledRequiredRadio = showRequiredRadioValidationState($form, 'Выберите обязательные опции');
+            const handledRequiredRadio = showRequiredRadioValidationState($form, msg);
 
             if (!handledRequiredRadio) {
                 $messages
@@ -780,7 +825,7 @@
                 return;
             }
 
-            let message = 'Сначала выберите ингредиенты для этого блюда.';
+            let message = getText('requiredError', 'Выберите обязательные опции');
 
             if (response && response.data && response.data.message) {
                 message = extractErrorText(response.data.message);
@@ -789,7 +834,7 @@
             openRequiredOptionsNotice(productId, message);
         })
         .fail(function (xhr) {
-            let message = 'Сначала выберите ингредиенты для этого блюда.';
+            let message = getText('requiredError', 'Выберите обязательные опции');
 
             if (xhr.responseJSON && xhr.responseJSON.data && xhr.responseJSON.data.message) {
                 message = extractErrorText(xhr.responseJSON.data.message);

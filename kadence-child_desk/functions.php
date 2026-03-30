@@ -24,6 +24,14 @@ function ff_restaurant_menu_assets() {
         return;
     }
 
+    $ui_frontend_config = function_exists('ff_menu_ui_get_frontend_config')
+        ? ff_menu_ui_get_frontend_config()
+        : array();
+
+    $ui_texts = isset($ui_frontend_config['texts']) && is_array($ui_frontend_config['texts'])
+        ? $ui_frontend_config['texts']
+        : array();
+
     // Подключаем CSS файл
     $css_file = get_stylesheet_directory() . '/assets/css/restaurant-menu.css';
     wp_enqueue_style(
@@ -54,11 +62,12 @@ function ff_restaurant_menu_assets() {
         'currencyFormatThousandSep' => function_exists('wc_get_price_thousand_separator') ? wc_get_price_thousand_separator() : ',',
         'currencyFormat'            => function_exists('get_woocommerce_price_format') ? get_woocommerce_price_format() : '%1$s%2$s',
         'phoneButtonSelector'       => '.ff-phone-button',
+        'ui'                        => $ui_frontend_config,
         'i18n' => array( // переводы для JS
-            'loading'  => __('Loading…', 'ffkebab'),
-            'error'    => __('Could not load product.', 'ffkebab'),
+            'loading'  => !empty($ui_texts['loading']) ? $ui_texts['loading'] : __('Loading…', 'ffkebab'),
+            'error'    => !empty($ui_texts['loadError']) ? $ui_texts['loadError'] : __('Could not load product.', 'ffkebab'),
             'addError' => __('Could not add product to cart.', 'ffkebab'),
-            'close'    => __('Close', 'ffkebab'),
+            'close'    => !empty($ui_texts['closeButton']) ? $ui_texts['closeButton'] : __('Close', 'ffkebab'),
             'add'      => __('ADD', 'ffkebab'),
         ),
     ));

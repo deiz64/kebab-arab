@@ -307,6 +307,108 @@ function ff_menu_ui_get($name) {
 	return get_option($name, isset($defaults[$name]) ? $defaults[$name] : '');
 }
 
+function ff_menu_ui_sanitize_option($option_name, $value) {
+	$text_options = array(
+		'ff_menu_notice_text',
+		'ff_menu_text_loading',
+		'ff_menu_text_notice_button',
+		'ff_menu_text_close_button',
+		'ff_menu_text_load_error',
+		'ff_menu_text_required_error',
+		'ff_menu_text_special_request_label',
+	);
+	$textarea_options = array(
+		'ff_menu_text_special_request_placeholder',
+	);
+	$checkbox_options = array(
+		'ff_menu_notice_show_icon',
+		'ff_menu_required_group_autoscroll',
+		'ff_menu_required_group_highlight',
+	);
+	$hex_options = array(
+		'ff_menu_card_bg',
+		'ff_menu_card_border_color',
+		'ff_menu_card_button_bg',
+		'ff_menu_card_button_text',
+		'ff_menu_popup_group_bg',
+		'ff_menu_popup_group_border_color',
+		'ff_menu_notice_text_color',
+		'ff_menu_notice_bg_color',
+		'ff_menu_notice_border_color',
+		'ff_menu_required_group_border_color',
+		'ff_menu_required_group_bg_color',
+		'ff_menu_nav_active_bg',
+		'ff_menu_nav_active_text',
+		'ff_menu_sticky_cart_bg',
+		'ff_menu_sticky_cart_text',
+	);
+	$ratio_options = array(
+		'ff_menu_card_img_ratio_desktop',
+		'ff_menu_card_img_ratio_tablet',
+		'ff_menu_card_img_ratio_mobile',
+		'ff_menu_popup_image_ratio',
+		'ff_menu_popup_mobile_image_ratio',
+	);
+	$fit_mode_options = array(
+		'ff_menu_card_img_fit_mode',
+	);
+	$float_options = array(
+		'ff_menu_nav_bg_opacity',
+	);
+
+	if (in_array($option_name, $text_options, true)) {
+		return sanitize_text_field($value);
+	}
+
+	if (in_array($option_name, $textarea_options, true)) {
+		return sanitize_textarea_field($value);
+	}
+
+	if (in_array($option_name, $checkbox_options, true)) {
+		return empty($value) ? 0 : 1;
+	}
+
+	if (in_array($option_name, $hex_options, true)) {
+		$sanitized = sanitize_hex_color($value);
+		$defaults = ff_menu_ui_get_defaults();
+		return $sanitized ?: (isset($defaults[$option_name]) ? $defaults[$option_name] : '');
+	}
+
+	if (in_array($option_name, $ratio_options, true)) {
+		$options = ff_menu_ui_ratio_options();
+		return isset($options[$value]) ? $value : ff_menu_ui_get_defaults()[$option_name];
+	}
+
+	if (in_array($option_name, $fit_mode_options, true)) {
+		$options = ff_menu_ui_fit_mode_options();
+		return isset($options[$value]) ? $value : ff_menu_ui_get_defaults()[$option_name];
+	}
+
+	if (in_array($option_name, $float_options, true)) {
+		return floatval($value);
+	}
+
+	return intval($value);
+}
+
+function ff_menu_ui_get_frontend_config() {
+	return array(
+		'texts' => array(
+			'loading'       => (string) ff_menu_ui_get('ff_menu_text_loading'),
+			'noticeButton'  => (string) ff_menu_ui_get('ff_menu_text_notice_button'),
+			'closeButton'   => (string) ff_menu_ui_get('ff_menu_text_close_button'),
+			'loadError'     => (string) ff_menu_ui_get('ff_menu_text_load_error'),
+			'requiredError' => (string) ff_menu_ui_get('ff_menu_text_required_error'),
+		),
+		'behavior' => array(
+			'showNoticeIcon'         => (int) ff_menu_ui_get('ff_menu_notice_show_icon') === 1,
+			'requiredGroupHighlight' => (int) ff_menu_ui_get('ff_menu_required_group_highlight') === 1,
+			'requiredGroupAutoscroll'=> (int) ff_menu_ui_get('ff_menu_required_group_autoscroll') === 1,
+			'requiredGroupScrollOffset' => max(0, intval(ff_menu_ui_get('ff_menu_required_group_scroll_offset'))),
+		),
+	);
+}
+
 /* ------------------------------------------------------
    2. Меню в админке
    ------------------------------------------------------ */
@@ -329,7 +431,11 @@ add_action('admin_init', 'ff_menu_ui_register_settings');
 
 function ff_menu_ui_register_settings() {
 	foreach (ff_menu_ui_get_defaults() as $option_name => $default_value) {
-		register_setting('ff_menu_ui_group', $option_name);
+		register_setting('ff_menu_ui_group', $option_name, array(
+			'sanitize_callback' => function ($value) use ($option_name) {
+				return ff_menu_ui_sanitize_option($option_name, $value);
+			},
+		));
 	}
 }
 
@@ -1007,6 +1113,7 @@ function ff_menu_ui_print_dynamic_css() {
 	$notice_mb             = max(0, intval(ff_menu_ui_get('ff_menu_notice_margin_bottom')));
 	$notice_max_width      = max(20, min(100, intval(ff_menu_ui_get('ff_menu_notice_max_width'))));
 	$notice_icon_size      = max(10, intval(ff_menu_ui_get('ff_menu_notice_icon_size')));
+	$notice_show_icon      = (int) ff_menu_ui_get('ff_menu_notice_show_icon') === 1;
 
 	$required_border       = sanitize_hex_color(ff_menu_ui_get('ff_menu_required_group_border_color')) ?: '#ef4444';
 	$required_bg           = sanitize_hex_color(ff_menu_ui_get('ff_menu_required_group_bg_color')) ?: '#fef2f2';
@@ -1159,6 +1266,7 @@ function ff_menu_ui_print_dynamic_css() {
 			border-radius: <?php echo $notice_radius; ?>px;
 		}
 		.ff-menu-popup-notice__icon {
+			display: <?php echo $notice_show_icon ? 'inline-flex' : 'none'; ?>;
 			font-size: <?php echo $notice_icon_size; ?>px;
 			margin-right: 8px;
 		}
